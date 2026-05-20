@@ -3,7 +3,7 @@ existing pages in wiki/<topic>/.
 
   - Update any existing entity pages affected by this new source.
   - Create new entity pages for any new concepts it introduces.
-  - Add the source to wiki/<topic>/index.md if a paper list is maintained there.
+  - Add the source to wiki/<topic>/index.md if a source list is maintained there.
   - Flag any contradictions with previously compiled knowledge, either inline
     on the affected pages or in wiki/<topic>/contradictions.md.
 
