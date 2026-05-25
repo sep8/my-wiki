@@ -86,7 +86,7 @@ Don't edit prior entries. If something is wrong, append a correction.
 
 ## Workflows
 
-Four workflows. Each agent surface exposes them differently, but the contracts
+Each agent surface exposes these workflows differently, but the contracts
 are identical.
 
 | Workflow      | Claude Code               | Codex CLI                  | GitHub Copilot              | When to run                                                                |
@@ -96,6 +96,7 @@ are identical.
 | `new-wiki`    | `/new-wiki`               | `/new-wiki`                | `/new-wiki`                 | A new source was added under `raw/<topic>/`                                |
 | `linting-wiki`| `/linting-wiki [topic]`   | `/linting-wiki [topic]`    | `/linting-wiki [topic]`     | Periodic audit (orphans, broken links, drift, contradictions)              |
 | `drop-wiki`   | `/drop-wiki <topic>`      | `/drop-wiki <topic>`       | `/drop-wiki <topic>`        | Delete a topic entirely (manifest + raw + wiki); requires confirmation     |
+| `export-topic`| `/export-topic <topic> <target-repo>` | `/export-topic <topic> <target-repo>` | `/export-topic <topic> <target-repo>` | Copy one curated topic into a code repo for coding-agent use |
 | `query-wiki`  | auto-triggered skill      | auto-triggered skill       | inline rule + `/query-wiki` | User asks a question whose subject overlaps an ingested topic              |
 
 Detailed contracts:
@@ -132,6 +133,22 @@ Before deleting, list scope and grep for cross-topic `[[brackets]]` that would
 become orphans. Require explicit user confirmation in the conversation. After
 deletion, sweep dangling cross-topic links in remaining topics. Append a log
 line.
+
+### export-topic
+Copy one curated topic from `wiki/<topic>/` into a code repository so coding
+agents can use it as local project knowledge. Run:
+
+```
+./scripts/export-topic.sh <topic> <target-repo> [dest-dir] [options]
+```
+
+Default destination is `docs/llm-wiki/<topic>/` inside the target repo. The
+script copies only curated wiki pages, writes an `AGENTS.snippet.md`, and can
+optionally install a `query-vendored-wiki` skill or append the snippet to the
+target repo's `AGENTS.md`.
+
+Do not copy `raw/<topic>/` or `_raw/<topic>.md` unless the user explicitly asks
+for source archival.
 
 ### query-wiki (auto-engage)
 Defined as a skill at `.agents/skills/query-wiki/SKILL.md`. Claude Code reads it

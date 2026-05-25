@@ -15,7 +15,7 @@ CLAUDE.md           stub pointing at AGENTS.md
 README.md           this file
 setup.sh            generates agent shims from templates/
 templates/          source of truth for shims (tracked)
-  workflows/          5 workflow prompts (fetch / init / new / lint / drop)
+  workflows/          workflow prompts (fetch / init / new / lint / drop / export)
   skill/              query-wiki skill
   copilot/            Copilot-specific instructions + prompts
 _raw/               public source manifests (per topic) + fetch.sh
@@ -50,7 +50,7 @@ Re-run `./setup.sh` after editing `templates/`.
 
 ## Workflows
 
-All five workflows are exposed as slash commands in every supported agent
+All workflows are exposed as slash commands in every supported agent
 (Claude Code, Codex CLI, GitHub Copilot). See [AGENTS.md](./AGENTS.md) for
 detailed contracts.
 
@@ -61,11 +61,24 @@ detailed contracts.
 | `/new-wiki`    | Ingest a newly-added source under an existing topic                       |
 | `/linting-wiki`| Audit for orphans, broken links, drift, contradictions, stale claims      |
 | `/drop-wiki`   | Delete a topic entirely (with confirmation + cross-topic link sweep)      |
+| `/export-topic`| Copy one curated topic into a code repo for coding-agent use              |
 | `/query-wiki`  | Answer a knowledge question from the wiki with citations (auto-engaged)   |
 
 `query-wiki` is the consumption-side workflow: Claude Code and Codex
 auto-trigger it when you ask a question in a covered domain; Copilot engages
 it via inline instructions.
+
+## Exporting a topic to a code repo
+
+Use `export-topic` when a project should vendor one topic for coding agents:
+
+```bash
+./scripts/export-topic.sh PageIndex /path/to/app --with-skill --update-agents
+```
+
+By default this writes `docs/llm-wiki/PageIndex/` in the target repo, copies
+only curated `wiki/PageIndex/` pages, and emits an `AGENTS.snippet.md` that
+teaches agents how to use the vendored topic.
 
 ## Adding a new topic
 
