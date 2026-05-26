@@ -17,6 +17,7 @@ Options:
   --force          Replace an existing exported topic directory
   --with-skill     Install a query-vendored-wiki skill into target-repo/.agents/skills/
   --update-agents  Append a short wiki instruction block to target-repo/AGENTS.md
+  --with-raw       Also copy raw/<topic>/ alongside the curated topic
 
 Examples:
   ./scripts/export-topic.sh PageIndex ../my-app
@@ -40,6 +41,7 @@ dest_dir="docs/llm-wiki"
 force=0
 with_skill=0
 update_agents=0
+with_raw=0
 
 if [[ $# -gt 0 && "$1" != --* ]]; then
   dest_dir="$1"
@@ -51,6 +53,7 @@ while [[ $# -gt 0 ]]; do
     --force) force=1 ;;
     --with-skill) with_skill=1 ;;
     --update-agents) update_agents=1 ;;
+    --with-raw) with_raw=1 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "error: unknown option: $1" >&2; usage >&2; exit 2 ;;
   esac
@@ -83,6 +86,18 @@ fi
 
 mkdir -p "$dest_root"
 cp -R "$topic_src" "$topic_dest"
+
+raw_dest=""
+if [[ "$with_raw" -eq 1 ]]; then
+  raw_src="$repo_root/raw/$topic"
+  if [[ ! -d "$raw_src" ]]; then
+    echo "error: --with-raw set but raw/$topic not found" >&2
+    exit 1
+  fi
+  raw_dest="$topic_dest/raw"
+  rm -rf "$raw_dest"
+  cp -R "$raw_src" "$raw_dest"
+fi
 
 snippet="$topic_dest/AGENTS.snippet.md"
 cat > "$snippet" <<EOF
@@ -146,6 +161,9 @@ EOF
 fi
 
 echo "exported wiki/$topic -> $topic_dest"
+if [[ -n "$raw_dest" ]]; then
+  echo "copied raw/$topic -> $raw_dest"
+fi
 echo "wrote AGENTS snippet -> $snippet"
 if [[ "$with_skill" -eq 1 ]]; then
   echo "installed skill -> $target_abs/.agents/skills/query-vendored-wiki/SKILL.md"

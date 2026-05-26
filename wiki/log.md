@@ -8,3 +8,4 @@ Append-only. Newest entries at the bottom. Format:
 
 - 2026-05-20  init-wiki  PageIndex    — 28 pages from 23 sources (PageIndex docs site: intro/getting-started/MCP/API/SDKs, tutorials on tree-search and doc-search, 4 cookbooks, foundational blog).
 - 2026-05-25  new-wiki  a2ui    — Created English A2UI topic pages from Chinese raw notes on runtime, catalogs, React rendering, parser, and package design.
+- 2026-05-26  linting-wiki  a2ui  — 0 issues found, 0 auto-fixed (no orphans, all links resolve, index matches disk, no cross-topic collisions).
