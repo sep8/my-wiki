@@ -1,25 +1,11 @@
-# A2UI Contradictions
+# Contradictions & Cross-source Tensions — A2UI
 
-## Renderer Package Target
+No unresolved claim conflicts were found within the topic's current upstream-only scope.
 
-Claim: The studied Google A2UI runtime model uses `@a2ui/web_core` plus `@a2ui/react`.
+The local-package analysis in `raw/a2ui/current-package-audit.md` is intentionally outside that scope, as documented in [[index]]. It describes a downstream wrapper and should not be treated as conflicting evidence about the upstream runtime.
 
-Sources: `raw/a2ui/modules/message-processor.md`, `raw/a2ui/modules/react-renderer.md`
+## Version and catalog drift
 
-Conflicting claim: The current package audit says the local package currently renders through `@a2ui-sdk/react`, not directly through the Google `@a2ui/react` and `MessageProcessor` boundary.
-
-Sources: `raw/a2ui/modules/current-package-audit.md`
-
-Reconciliation: Treat this as an implementation decision, not a factual conflict. New generic package APIs should first improve adapter, normalization, validation, and action boundaries, then explicitly decide whether to keep the existing renderer SDK or migrate to the Google `@a2ui/react` runtime stack.
-
-## Normalization Strictness
-
-Claim: The current normalizer remaps unknown components, strips properties, patches icons/actions, and invents fallbacks.
-
-Sources: `raw/a2ui/modules/current-package-audit.md`
-
-Conflicting claim: The Python SDK parser only performs conservative syntax repair and leaves semantic validation to the schema and integrity validator.
-
-Sources: `raw/a2ui/modules/python-schema-prompt-parser.md`
-
-Reconciliation: Use strict parsing and validation as the reusable package default. Keep heuristic repair as an explicit opt-in mode with warnings, and leave domain fallback policy to the application.
+- **Earlier notes** (`raw/a2ui/basic-catalog.md`, `raw/a2ui/react-renderer.md`) focus on v0.9 and use `https://a2ui.org/specification/v0_9/basic_catalog.json`; they also describe 24 basic functions.
+- **Newer upstream checkout** (`raw/a2ui/google-A2UI/`) identifies v0.9.1 as the current production protocol, v1.0 as a release candidate, uses `https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json`, and implements 25 basic functions.
+- **Reconciliation:** treat this topic as documentation for the v0.9 protocol family, with v0.9.1 as the current production authority. Use the newer catalog ID and function count; consult the v1.0 evolution guide before adopting candidate-only behavior.

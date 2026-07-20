@@ -27,4 +27,4 @@ The processor can also report client capabilities, including supported catalog i
 
 ## Related
 
-[[a2ui-runtime-flow]], [[surface-model]], [[basic-catalog]], [[schema-prompt-parser]], [[react-renderer]]
+[[ui-runtime-flow]], [[surface-model]], [[basic-catalog]], [[schema-prompt-parser]], [[react-renderer]]

@@ -27,8 +27,4 @@ Validation goes beyond JSON Schema. It checks component id uniqueness, root comp
 
 ## Related
 
-[[output-normalization]], [[basic-catalog]], [[message-processor]], [[agent-adapter-boundary]]
-
-## Contradictions
-
-See [[contradictions]] for the tension between conservative parser repair and the current package's more heuristic normalizer.
+[[basic-catalog]], [[message-processor]]

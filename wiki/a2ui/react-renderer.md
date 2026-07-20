@@ -28,8 +28,4 @@ Application or package code remains responsible for creating the processor, subs
 
 ## Related
 
-[[a2ui-runtime-flow]], [[message-processor]], [[surface-model]], [[generic-binder]], [[basic-catalog]]
-
-## Contradictions
-
-See [[contradictions]] for the current-package tension between `@a2ui/react` and `@a2ui-sdk/react`.
+[[ui-runtime-flow]], [[message-processor]], [[surface-model]], [[generic-binder]], [[basic-catalog]]
