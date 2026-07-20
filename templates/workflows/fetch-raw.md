@@ -1,9 +1,9 @@
 Download source files for a topic into raw/<topic>/ from the manifest at
 _raw/<topic>.md.
 
-Usage:
-  /fetch-raw                 — fetch all topics with manifests
-  /fetch-raw <topic>         — fetch one topic
+Arguments:
+  no arguments              — fetch all topics with manifests
+  <topic>                   — fetch one topic
 
 Run the bash script directly:
 

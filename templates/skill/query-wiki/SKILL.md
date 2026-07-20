@@ -43,7 +43,7 @@ explorations back into it.
 
 ## What this skill does NOT do
 
-- It doesn't ingest new sources — that's `/new-wiki`.
-- It doesn't audit the wiki — that's `/linting-wiki`.
+- It doesn't ingest new sources — that's the `new-wiki` workflow.
+- It doesn't audit the wiki — that's the `linting-wiki` workflow.
 - It doesn't answer from training data alone when the topic is covered locally;
   the wiki is the source of truth for ingested material.

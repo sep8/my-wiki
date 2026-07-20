@@ -1,7 +1,7 @@
 Remove a topic from the wiki entirely.
 
-Usage:
-  /drop-wiki <topic>
+Required argument:
+  <topic> — topic to remove
 
 Procedure:
 

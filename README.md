@@ -52,7 +52,7 @@ Re-run `./setup.sh` after editing `templates/`.
 
 Claude Code and GitHub Copilot expose workflows as slash commands. Codex uses
 repo-local Skills from `.agents/skills/`; for example, run
-`$linting-wiki page-index` or `$fetch-raw page-index`. See
+`$linting-wiki page-index` or `$export-topic page-index /path/to/app`. See
 [AGENTS.md](./AGENTS.md) for detailed contracts.
 
 | Workflow       | What it does                                                              |

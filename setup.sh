@@ -17,6 +17,16 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "$0")" && pwd)"
 cd "$repo_root"
 
+codex_legacy_prompt_filenames=(
+  drop-wiki.md
+  export-topic.md
+  fetch-raw.md
+  init-wiki.md
+  linting-wiki.md
+  new-wiki.md
+)
+readonly codex_legacy_prompt_filenames
+
 if [[ ! -d templates ]]; then
   echo "error: templates/ not found at $repo_root" >&2
   exit 1
@@ -79,9 +89,14 @@ install_codex() {
 
   cp templates/skill/query-wiki/SKILL.md .agents/skills/query-wiki/SKILL.md
 
-  if [[ -d .codex/prompts ]]; then
-    for workflow_path in templates/workflows/*.md; do
-      rm -f ".codex/prompts/$(basename "$workflow_path")"
+  if [[ ! -L .codex && -d .codex &&
+        ! -L .codex/prompts && -d .codex/prompts ]]; then
+    local legacy_prompt_filename legacy_prompt_path
+    for legacy_prompt_filename in "${codex_legacy_prompt_filenames[@]}"; do
+      legacy_prompt_path=".codex/prompts/$legacy_prompt_filename"
+      if [[ -L "$legacy_prompt_path" || -f "$legacy_prompt_path" ]]; then
+        rm -f -- "$legacy_prompt_path"
+      fi
     done
     rmdir .codex/prompts 2>/dev/null || true
     rmdir .codex 2>/dev/null || true

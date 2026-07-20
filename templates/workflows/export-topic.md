@@ -1,9 +1,9 @@
 Export one curated wiki topic into a code repository so coding agents can use
 it as local project knowledge.
 
-Usage:
-  /export-topic <topic> <target-repo>
-  /export-topic <topic> <target-repo> [dest-dir]
+Arguments:
+  <topic> <target-repo>
+  <topic> <target-repo> [dest-dir]
 
 Default destination inside the target repo:
 
