@@ -28,7 +28,7 @@ wiki/               LLM-generated pages
   shared/             (optional) concepts referenced by ≥2 topics
 ```
 
-Agent shim directories (`.claude/`, `.codex/`, `.agents/`, `.github/prompts/`,
+Agent shim directories (`.claude/`, `.agents/`, `.github/prompts/`,
 `.github/copilot-instructions.md`) are **gitignored** — regenerate per machine
 with `./setup.sh`.
 
@@ -50,19 +50,20 @@ Re-run `./setup.sh` after editing `templates/`.
 
 ## Workflows
 
-All workflows are exposed as slash commands in every supported agent
-(Claude Code, Codex CLI, GitHub Copilot). See [AGENTS.md](./AGENTS.md) for
-detailed contracts.
+Claude Code and GitHub Copilot expose workflows as slash commands. Codex uses
+repo-local Skills from `.agents/skills/`; for example, run
+`$linting-wiki page-index` or `$fetch-raw page-index`. See
+[AGENTS.md](./AGENTS.md) for detailed contracts.
 
 | Workflow       | What it does                                                              |
 | -------------- | ------------------------------------------------------------------------- |
-| `/fetch-raw`   | Download public sources listed in `_raw/<topic>.md` into `raw/<topic>/`   |
-| `/init-wiki`   | Bootstrap a topic from its `raw/` sources — create entity pages + index   |
-| `/new-wiki`    | Ingest a newly-added source under an existing topic                       |
-| `/linting-wiki`| Audit for orphans, broken links, drift, contradictions, stale claims      |
-| `/drop-wiki`   | Delete a topic entirely (with confirmation + cross-topic link sweep)      |
-| `/export-topic`| Copy one curated topic into a code repo for coding-agent use              |
-| `/query-wiki`  | Answer a knowledge question from the wiki with citations (auto-engaged)   |
+| `fetch-raw`    | Download public sources listed in `_raw/<topic>.md` into `raw/<topic>/`   |
+| `init-wiki`    | Bootstrap a topic from its `raw/` sources — create entity pages + index   |
+| `new-wiki`     | Ingest a newly-added source under an existing topic                       |
+| `linting-wiki` | Audit for orphans, broken links, drift, contradictions, stale claims      |
+| `drop-wiki`    | Delete a topic entirely (with confirmation + cross-topic link sweep)      |
+| `export-topic` | Copy one curated topic into a code repo for coding-agent use              |
+| `query-wiki`   | Answer a knowledge question from the wiki with citations (auto-engaged)   |
 
 `query-wiki` is the consumption-side workflow: Claude Code and Codex
 auto-trigger it when you ask a question in a covered domain; Copilot engages
@@ -73,11 +74,11 @@ it via inline instructions.
 Use `export-topic` when a project should vendor one topic for coding agents:
 
 ```bash
-./scripts/export-topic.sh PageIndex /path/to/app --with-skill --update-agents
+./scripts/export-topic.sh page-index /path/to/app --with-skill --update-agents
 ```
 
-By default this writes `docs/llm-wiki/PageIndex/` in the target repo, copies
-only curated `wiki/PageIndex/` pages, and emits an `AGENTS.snippet.md` that
+By default this writes `docs/llm-wiki/page-index/` in the target repo, copies
+only curated `wiki/page-index/` pages, and emits an `AGENTS.snippet.md` that
 teaches agents how to use the vendored topic.
 
 ## Adding a new topic
@@ -94,8 +95,11 @@ EOF
 # 2. Download sources
 ./_raw/fetch.sh my-topic
 
-# 3. In your agent (Claude / Codex / Copilot Chat):
+# 3. In Claude Code or Copilot Chat:
 /init-wiki my-topic
+
+# Or in Codex:
+$init-wiki my-topic
 ```
 
 For non-public sources (private docs, internal PDFs), skip the manifest and
@@ -107,7 +111,7 @@ gitignored.
 | Agent          | Auto-trigger query? | Shim location                                          |
 | -------------- | ------------------- | ------------------------------------------------------ |
 | Claude Code    | yes (skill)         | `.claude/commands/`, `.claude/skills/query-wiki/`      |
-| Codex CLI      | yes (skill)         | `.codex/prompts/`, `.agents/skills/query-wiki/`        |
+| Codex CLI      | yes (skill)         | `.agents/skills/`                                      |
 | GitHub Copilot | inline instructions | `.github/copilot-instructions.md`, `.github/prompts/`  |
 
 Adding a new agent: drop a new section into `templates/` and a case into
