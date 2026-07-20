@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install agent shims (commands / skills / prompts) for one or more agents.
+# Install agent shims (commands / skills) for one or more agents.
 #
 # Usage:
 #   ./setup.sh                  # default: claude
@@ -9,8 +9,8 @@
 #   ./setup.sh claude codex     # multiple
 #   ./setup.sh all
 #
-# Source of truth lives in templates/. Generated dirs (.claude/, .codex/,
-# .agents/, .github/copilot-instructions.md, .github/prompts/) are gitignored.
+# Source of truth lives in templates/. Generated dirs (.claude/, .agents/,
+# .github/copilot-instructions.md, .github/prompts/) are gitignored.
 
 set -euo pipefail
 
@@ -31,12 +31,63 @@ install_claude() {
   echo "    .claude/skills/query-wiki/SKILL.md"
 }
 
+codex_workflow_description() {
+  case "$1" in
+    fetch-raw)
+      echo "Download public wiki sources from topic manifests. Use when the user asks to fetch or refresh raw topic sources."
+      ;;
+    init-wiki)
+      echo "Build a curated wiki topic from raw sources. Use when the user asks to initialize or bootstrap a wiki topic."
+      ;;
+    new-wiki)
+      echo "Ingest a newly added source into an existing wiki topic. Use when the user asks to update the wiki from new raw material."
+      ;;
+    linting-wiki)
+      echo "Audit wiki topics for link, index, contradiction, promotion, and freshness issues. Use when the user asks to lint or audit the wiki."
+      ;;
+    drop-wiki)
+      echo "Remove a wiki topic after confirmation and repair affected links. Use when the user explicitly asks to delete or drop a topic."
+      ;;
+    export-topic)
+      echo "Export one curated wiki topic into another repository. Use when the user asks to vendor or export wiki knowledge."
+      ;;
+    *)
+      echo "error: missing Codex skill description for workflow '$1'" >&2
+      return 1
+      ;;
+  esac
+}
+
 install_codex() {
   echo "==> codex"
-  mkdir -p .codex/prompts .agents/skills/query-wiki
-  cp templates/workflows/*.md .codex/prompts/
+  mkdir -p .agents/skills/query-wiki
+
+  local workflow_path workflow_name skill_dir description
+  for workflow_path in templates/workflows/*.md; do
+    workflow_name="$(basename "$workflow_path" .md)"
+    skill_dir=".agents/skills/$workflow_name"
+    description="$(codex_workflow_description "$workflow_name")"
+    mkdir -p "$skill_dir"
+    {
+      printf '%s\n' '---'
+      printf 'name: %s\n' "$workflow_name"
+      printf 'description: "%s"\n' "$description"
+      printf '%s\n\n' '---'
+      cat "$workflow_path"
+    } > "$skill_dir/SKILL.md"
+  done
+
   cp templates/skill/query-wiki/SKILL.md .agents/skills/query-wiki/SKILL.md
-  echo "    .codex/prompts/          ← $(ls templates/workflows | wc -l | tr -d ' ') workflows"
+
+  if [[ -d .codex/prompts ]]; then
+    for workflow_path in templates/workflows/*.md; do
+      rm -f ".codex/prompts/$(basename "$workflow_path")"
+    done
+    rmdir .codex/prompts 2>/dev/null || true
+    rmdir .codex 2>/dev/null || true
+  fi
+
+  echo "    .agents/skills/          ← $(ls templates/workflows | wc -l | tr -d ' ') workflow skills"
   echo "    .agents/skills/query-wiki/SKILL.md  (Codex auto-discovers)"
 }
 
