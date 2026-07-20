@@ -1,6 +1,6 @@
 ---
 name: query-wiki
-description: Answer the user's question using the local knowledge wiki under wiki/<topic>/. Engage when the user asks a substantive question whose subject matter overlaps a topic already ingested in wiki/ (e.g., transformers, attention, BERT, GPT-3, RLHF, alignment, foundation models). Do NOT engage for meta-questions about the wiki tooling itself, for trivial chit-chat, or for coding tasks unrelated to the wiki's subject domain.
+description: Answer the user's question using topic folders under wiki/. Engage when the user asks a substantive question whose subject matter overlaps a topic already ingested in wiki/ (e.g., transformers, attention, BERT, GPT-3, RLHF, alignment, foundation models). Do NOT engage for meta-questions about the wiki tooling itself, for trivial chit-chat, or for coding tasks unrelated to the wiki's subject domain.
 ---
 
 # query-wiki
