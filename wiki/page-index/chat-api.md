@@ -25,7 +25,7 @@ Pass `doc_id` as a list; the model can reason and compare across documents in on
 
 ### Relationship to other endpoints
 - Recommended over the **legacy retrieval API** (`/retrieval/`) for most uses — see [[contradictions]].
-- Under the hood it uses [[hybrid-tree-search]] over [[tree-index]] for each doc.
+- The local sources do not document the Chat API's internal search algorithm; do not assume the legacy Retrieval API's [[hybrid-tree-search]] default applies unchanged.
 - Also accessible from [[python-sdk]] (`pi_client.chat_completions(...)`) and [[javascript-sdk]] (`client.api.chatCompletions(...)`).
 
 ## Related

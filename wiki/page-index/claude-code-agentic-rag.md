@@ -1,7 +1,7 @@
 # Claude Code → Agentic RAG (precedent)
 
 ## Summary
-PageIndex's authors cite Anthropic's [[claude-code-guide]]-style Claude Code as a precedent: Claude Code moved *away* from vector-based RAG for code retrieval, instead letting the model use grep/file-navigation tools agentically. PageIndex argues the same principle applies to *document* retrieval — hence [[reasoning-based-rag]].
+PageIndex's authors cite Anthropic's Claude Code as a precedent: Claude Code moved *away* from vector-based RAG for code retrieval, instead letting the model use grep/file-navigation tools agentically. PageIndex argues the same principle applies to *document* retrieval — hence [[reasoning-based-rag]].
 
 ## Explanation
 The argument structure used in the foundational PageIndex blog:

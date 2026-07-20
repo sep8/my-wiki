@@ -9,7 +9,7 @@ Usage:
   ./scripts/export-topic.sh <topic> <target-repo> [dest-dir] [options]
 
 Arguments:
-  topic        Topic folder under wiki/, for example PageIndex
+  topic        Topic folder under wiki/, for example page-index
   target-repo  Path to the code repository that should receive the topic
   dest-dir     Destination directory inside target-repo (default: docs/llm-wiki)
 
@@ -20,9 +20,9 @@ Options:
   --with-raw       Also copy raw/<topic>/ alongside the curated topic
 
 Examples:
-  ./scripts/export-topic.sh PageIndex ../my-app
-  ./scripts/export-topic.sh PageIndex ../my-app docs/knowledge --with-skill
-  ./scripts/export-topic.sh PageIndex ../my-app --force --update-agents
+  ./scripts/export-topic.sh page-index ../my-app
+  ./scripts/export-topic.sh page-index ../my-app docs/knowledge --with-skill
+  ./scripts/export-topic.sh page-index ../my-app --force --update-agents
 USAGE
 }
 
