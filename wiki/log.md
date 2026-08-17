@@ -11,3 +11,4 @@ Append-only. Newest entries at the bottom. Format:
 - 2026-05-26  linting-wiki  a2ui  — 0 issues found, 0 auto-fixed (no orphans, all links resolve, index matches disk, no cross-topic collisions).
 - 2026-07-20  linting-wiki  all  — 13 issues found, 13 auto-fixed
 - 2026-07-20  linting-wiki  agentic-mapping-app  — 22 issues found, 22 auto-fixed
+- 2026-07-23  linting-wiki  page-index  — Qualified the PageIndex summary: pure LLM path versus hybrid and semantic vector use.

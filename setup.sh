@@ -6,11 +6,13 @@
 #   ./setup.sh claude
 #   ./setup.sh codex
 #   ./setup.sh copilot
-#   ./setup.sh claude codex     # multiple
+#   ./setup.sh hermes
+#   ./setup.sh claude hermes    # multiple
 #   ./setup.sh all
 #
-# Source of truth lives in templates/. Generated dirs (.claude/, .agents/,
-# .github/copilot-instructions.md, .github/prompts/) are gitignored.
+# Source of truth lives in templates/. Generated repository directories
+# (.claude/, .agents/, .github/copilot-instructions.md, .github/prompts/) are
+# gitignored. The Hermes bridge is generated under $HERMES_HOME/skills/.
 
 set -euo pipefail
 
@@ -115,16 +117,29 @@ install_copilot() {
   echo "    .github/prompts/         ← $(ls templates/copilot/prompts | wc -l | tr -d ' ') prompts"
 }
 
+install_hermes() {
+  local hermes_home hermes_skill_dir
+  hermes_home="${HERMES_HOME:-$HOME/.hermes}"
+  hermes_skill_dir="$hermes_home/skills/my-wiki"
+
+  echo "==> hermes"
+  mkdir -p "$hermes_skill_dir"
+  cp templates/hermes/my-wiki/SKILL.md "$hermes_skill_dir/SKILL.md"
+  echo "    $hermes_skill_dir/SKILL.md"
+  echo "    start in this repo with: hermes --skills my-wiki"
+}
+
 agents=("$@")
 [[ ${#agents[@]} -eq 0 ]] && agents=(claude)
-[[ "${agents[*]}" == "all" ]] && agents=(claude codex copilot)
+[[ "${agents[*]}" == "all" ]] && agents=(claude codex copilot hermes)
 
 for a in "${agents[@]}"; do
   case "$a" in
     claude)  install_claude ;;
     codex)   install_codex ;;
     copilot) install_copilot ;;
-    *) echo "unknown agent: $a (expected: claude | codex | copilot | all)" >&2; exit 2 ;;
+    hermes)  install_hermes ;;
+    *) echo "unknown agent: $a (expected: claude | codex | copilot | hermes | all)" >&2; exit 2 ;;
   esac
 done
 

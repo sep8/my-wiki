@@ -14,8 +14,9 @@ Agent shims (`.claude/`, `.agents/`, `.github/prompts/`) are
 ```bash
 ./setup.sh              # default: claude
 ./setup.sh codex        # codex only
+./setup.sh hermes       # install Hermes bridge skill
 ./setup.sh claude codex # both
-./setup.sh all          # claude + codex + copilot
+./setup.sh all          # claude + codex + copilot + hermes
 ```
 
 To update shims after editing `templates/`, just re-run `setup.sh`.
@@ -39,6 +40,7 @@ setup.sh            generates per-agent shims from templates/
 .claude/            Claude Code shims (commands/, skills/)
 .agents/skills/     Codex workflow skills and query-wiki (auto-discovered)
 .github/            GitHub Copilot shims (copilot-instructions.md, prompts/)
+$HERMES_HOME/skills/my-wiki/  Hermes bridge skill (generated locally; default ~/.hermes)
 ```
 
 ## Page conventions
@@ -88,15 +90,15 @@ Don't edit prior entries. If something is wrong, append a correction.
 Each agent surface exposes these workflows differently, but the contracts
 are identical.
 
-| Workflow       | Claude Code                 | Codex CLI                    | GitHub Copilot              | When to run                                                                |
-| -------------- | --------------------------- | ---------------------------- | --------------------------- | -------------------------------------------------------------------------- |
-| `fetch-raw`    | `/fetch-raw [topic]`        | `$fetch-raw [topic]`         | `/fetch-raw [topic]`        | Download public sources listed in `_raw/<topic>.md` into `raw/<topic>/`    |
-| `init-wiki`    | `/init-wiki [topic]`        | `$init-wiki [topic]`         | `/init-wiki [topic]`        | Bootstrap a topic from its `raw/` sources                                  |
-| `new-wiki`     | `/new-wiki`                 | `$new-wiki`                  | `/new-wiki`                 | A new source was added under `raw/<topic>/`                                |
-| `linting-wiki` | `/linting-wiki [topic]`     | `$linting-wiki [topic]`      | `/linting-wiki [topic]`     | Periodic audit (orphans, broken links, drift, contradictions)              |
-| `drop-wiki`    | `/drop-wiki <topic>`        | `$drop-wiki <topic>`         | `/drop-wiki <topic>`        | Delete a topic entirely (manifest + raw + wiki); requires confirmation     |
-| `export-topic` | `/export-topic ...`         | `$export-topic ...`          | `/export-topic ...`         | Copy one curated topic into a code repo for coding-agent use               |
-| `query-wiki`   | auto-triggered skill        | auto-triggered skill         | inline rule + `/query-wiki` | User asks a question whose subject overlaps an ingested topic              |
+| Workflow       | Claude Code                 | Codex CLI                    | GitHub Copilot              | Hermes Agent | When to run                                                                |
+| -------------- | --------------------------- | ---------------------------- | --------------------------- | ------------ | -------------------------------------------------------------------------- |
+| `fetch-raw`    | `/fetch-raw [topic]`        | `$fetch-raw [topic]`         | `/fetch-raw [topic]`        | Explicit request after `hermes --skills my-wiki` | Download public sources listed in `_raw/<topic>.md` into `raw/<topic>/`    |
+| `init-wiki`    | `/init-wiki [topic]`        | `$init-wiki [topic]`         | `/init-wiki [topic]`        | Explicit request after `hermes --skills my-wiki` | Bootstrap a topic from its `raw/` sources                                  |
+| `new-wiki`     | `/new-wiki`                 | `$new-wiki`                  | `/new-wiki`                 | Explicit request after `hermes --skills my-wiki` | A new source was added under `raw/<topic>/`                                |
+| `linting-wiki` | `/linting-wiki [topic]`     | `$linting-wiki [topic]`      | `/linting-wiki [topic]`     | Explicit request after `hermes --skills my-wiki` | Periodic audit (orphans, broken links, drift, contradictions)              |
+| `drop-wiki`    | `/drop-wiki <topic>`        | `$drop-wiki <topic>`         | `/drop-wiki <topic>`        | Explicit request after `hermes --skills my-wiki` | Delete a topic entirely (manifest + raw + wiki); requires confirmation     |
+| `export-topic` | `/export-topic ...`         | `$export-topic ...`          | `/export-topic ...`         | Explicit request after `hermes --skills my-wiki` | Copy one curated topic into a code repo for coding-agent use               |
+| `query-wiki`   | auto-triggered skill        | auto-triggered skill         | inline rule + `/query-wiki` | Explicit request after `hermes --skills my-wiki` | User asks a question whose subject overlaps an ingested topic              |
 
 Detailed contracts:
 
@@ -155,6 +157,11 @@ via `.claude/skills/query-wiki/SKILL.md` (symlink); Codex auto-discovers it from
 `.agents/skills/`; both engage by description match. GitHub Copilot doesn't
 support skill auto-trigger, so the same rule is duplicated inline in
 `.github/copilot-instructions.md` and `.github/prompts/query-wiki.prompt.md`.
+
+Hermes automatically loads this repository's `AGENTS.md` when started from
+the repository root. Its generated `my-wiki` bridge is intentionally loaded
+with `hermes --skills my-wiki`; it routes each named workflow to the canonical
+templates rather than defining custom slash commands or duplicating workflow text.
 
 When the user asks a substantive question whose subject overlaps a topic in
 `wiki/`, prefer the wiki over re-deriving from training knowledge:

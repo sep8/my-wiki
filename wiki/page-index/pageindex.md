@@ -1,7 +1,7 @@
 # PageIndex
 
 ## Summary
-PageIndex is a vectorless, reasoning-based RAG framework by [[vectify-ai]] that turns a document into a tree-structured index (a hierarchical Table of Contents) and lets an LLM perform agentic reasoning over that structure for traceable, explainable retrieval — without vector databases or chunking.
+PageIndex is a reasoning-based RAG framework by [[vectify-ai]] that turns a document into a tree-structured index (a hierarchical Table of Contents) for traceable, explainable retrieval. Its pure [[llm-tree-search]] path can navigate that structure without a vector database or fixed-length document chunks; [[hybrid-tree-search]] and [[doc-search-by-semantics]] can use vectors.
 
 ## Explanation
 PageIndex replaces similarity search with structural navigation. Documents are processed into a JSON [[tree-index]] whose nodes carry titles, summaries, and pointers to raw content. At query time, the LLM reads this index inside its context window (an [[in-context-index]]) and uses [[agentic-retrieval-loop]] to decide *where to look next* rather than ranking pre-embedded chunks.

@@ -18,6 +18,7 @@ templates/          source of truth for shims (tracked)
   workflows/          workflow prompts (fetch / init / new / lint / drop / export)
   skill/              query-wiki skill
   copilot/            Copilot-specific instructions + prompts
+$HERMES_HOME/skills/my-wiki/  Hermes bridge skill (generated locally; default HERMES_HOME is ~/.hermes)
 _raw/               public source manifests (per topic) + fetch.sh
   <topic>.md          - [label](url) → filename per line
   fetch.sh            downloads manifests into raw/<topic>/ (idempotent)
@@ -40,8 +41,9 @@ cd <repo>
 
 ./setup.sh              # default: claude
 ./setup.sh codex        # codex only
+./setup.sh hermes       # install the Hermes bridge skill
 ./setup.sh claude codex # multiple
-./setup.sh all          # claude + codex + copilot
+./setup.sh all          # claude + codex + copilot + hermes
 
 ./_raw/fetch.sh         # download all public sources listed in _raw/
 ```
@@ -54,6 +56,21 @@ Claude Code and GitHub Copilot expose workflows as slash commands. Codex uses
 repo-local Skills from `.agents/skills/`; for example, run
 `$linting-wiki page-index` or `$export-topic page-index /path/to/app`. See
 [AGENTS.md](./AGENTS.md) for detailed contracts.
+
+### Hermes
+
+`AGENTS.md` is loaded automatically when Hermes starts in this repository.
+Install the bridge skill once per Hermes home/profile, then preload it explicitly:
+
+```bash
+./setup.sh hermes
+hermes --skills my-wiki
+```
+
+Ask for any canonical workflow by name, for example `Run linting-wiki page-index.`
+The bridge reads the existing templates under `templates/workflows/` and
+`templates/skill/query-wiki/`; it does not provide custom Hermes slash commands.
+To install into another profile, set `HERMES_HOME` before running setup.
 
 | Workflow       | What it does                                                              |
 | -------------- | ------------------------------------------------------------------------- |
@@ -113,6 +130,7 @@ gitignored.
 | Claude Code    | yes (skill)         | `.claude/commands/`, `.claude/skills/query-wiki/`      |
 | Codex CLI      | yes (skill)         | `.agents/skills/`                                      |
 | GitHub Copilot | inline instructions | `.github/copilot-instructions.md`, `.github/prompts/`  |
+| Hermes Agent   | Explicit preload (`--skills my-wiki`) | `$HERMES_HOME/skills/my-wiki/` |
 
 Adding a new agent: drop a new section into `templates/` and a case into
 `setup.sh`.
